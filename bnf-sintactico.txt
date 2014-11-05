@@ -1,0 +1,69 @@
+<exp> ::== <exp> OP_SUMA <term> |
+		   <exp> OP_RESTA <term> |
+		   <term>
+		 
+<term> ::== <term> OP_PRODUCTO <pot> |
+		    <term> OP_DIVISION <pot> |
+		    <pot>
+		    
+<pot> ::== <pot> OP_POTENCIA <factor> |
+		   <factor>
+
+<factor> ::== PARENTESIS_OPEN <exp> PARENTESIS_CLOSE |
+			  ID |
+			  PREDEF PARENTESIS_OPEN <exp> PARENTESIS_CLOSE |
+			  CONSTANTE |
+			  NUMERO |
+			  OP_RESTA <factor>
+
+===================================================================
+
+<exp> ::== <term> <exp2>
+
+<exp2> ::= OP_SUMA <term> <exp2> |
+		   OP_RESTA <term> <exp2> |
+		   $
+
+<term> ::== <pot> <term2>
+
+<term2> ::= OP_PRODUCTO <pot> <term2> |
+		    OP_DIVISION <pot> <term2> |
+		    $
+
+<pot> ::== <factor> <pot2>
+
+
+<pot2> ::== OP_POTENCIA <factor> <pot2> |
+			$
+
+<factor> ::== PARENTESIS_OPEN <exp> PARENTESIS_CLOSE |
+			  ID |
+			  PREDEF PARENTESIS_OPEN <exp> PARENTESIS_CLOSE |
+			  CONSTANTE |
+			  NUMERO |
+			  OP_RESTA <factor>
+
+===================================================================
+
+<exp> ::== <factor> <pot2> <term2> <exp2>
+
+<exp2> ::= OP_SUMA <factor> <pot2> <term2> <exp2> |
+		   OP_RESTA <factor> <pot2> <term2> <exp2> |
+		   $
+
+<term2> ::= OP_PRODUCTO <factor> <pot2> <term2> |
+		    OP_DIVISION <factor> <pot2> <term2> |
+		    $
+
+<pot2> ::== OP_POTENCIA <factor> <pot2> |
+			$
+
+<factor> ::== PARENTESIS_OPEN <factor> <pot2> <term2> <exp2> PARENTESIS_CLOSE |
+			  ID |
+			  PREDEF PARENTESIS_OPEN <factor> <pot2> <term2> <exp2> PARENTESIS_CLOSE |
+			  CONSTANTE |
+			  NUMERO |
+			  OP_RESTA <factor>
+
+
+

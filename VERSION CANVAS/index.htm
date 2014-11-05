@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>JSMath</title>
+		<link type="text/css" href="css/trontastic/jquery-ui-1.8.7.custom.css" rel="stylesheet" />
+		<link type="text/css" href="css/local-ui.css" rel="stylesheet" />
+		<script type="text/javascript" src="js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="js/jquery/jquery-ui-1.8.7.custom.min.js"></script>
+		<script type="text/javascript" src="js/jsmath/sintacticparser.js"></script>
+		<script type="text/javascript" src="js/jsmath/mathematic.js"></script>
+		<script type="text/javascript" src="js/jsmath/lexparser.js"></script>
+		<script type="text/javascript" src="js/jsmath/util.js"></script>
+		<script type="text/javascript" src="js/jsmath/mathdraw.js"></script>
+		<script type="text/javascript" src="js/local-ui.js"></script>
+	<!--[if IE]><script type="text/javascript" src="js/ie8/excanvas/excanvas.js"></script><![endif]-->
+	</head>
+	<body>
+		<h2 class="mathHeaders">JSMath v.1.0.0</h2>
+		<div id="tabs" style="height: 555px">
+			<ul>
+				<li><a href="#tabs-1">Graficador</a></li>
+				<li><a href="#tabs-2">Expresiones ingresadas</a></li>
+				<li><a href="#tabs-3">Configuración</a></li>
+				<li><a href="#tabs-4">Ayuda</a></li>
+			</ul>
+			<div id="tabs-1">
+				<table width="100%" cellpadding="5px" cellspacing="5px">
+					<tr>
+						<td align="center" colspan="2">
+							<table>
+								<tr>
+									<td>
+										<div id="errorMessageDiv" class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em; display: none">
+											<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span><span id="errorMessage" style="text-align: left; margin-right: 0.3em;"></span></p>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" id="expresion" style="border:0; color:white; font-weight:bold; background: #767676" size="60" onchange="createFunction()" />
+						</td>
+						<td>
+							<table cellpadding="5px" cellspacing="5px">
+								<tr>
+									<td>
+										<button id="drawButton" onclick="drawFunction()">Draw</button>
+									</td>
+									<td>
+										<button id="clearButton" onclick="clearTable()">Clear</button>
+									</td>
+									<td>
+										<button id="deriveButton" onclick="derive()">Derive</button>
+									</td>
+									<td>
+										<button id="saveButton" onclick="save()">Save</button>
+									</td>
+									<td>
+										<button id="simplifyButton" onclick="simplify()">Simplify</button>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<table width="100%">
+								<tr vAlign="top">
+									<td width="70%" align="center">
+										<canvas id="grafico" width="400" height="400" style="background-color: white;"></canvas>
+									</td>
+									<td width="30%">
+										<div style="margin-top:7px; padding:10px; width:250px; height:80px;" class="ui-widget-content">
+											<table>
+												<tr>
+													<td>Size X : <span id="sizeXDIV"></span> pixels.</td>
+												</tr>
+												<tr>
+													<td>Size Y : <span id="sizeYDIV"></span> pixels.</td>
+												</tr>
+												<tr>
+													<td>Scale X (unidad:pixels) --> (1:<span id="scaleX"></span>) </td>
+												</tr>
+												<tr>
+													<td>Scale Y (unidad:pixels) --> (1:<span id="scaleY"></span>) </td>
+												</tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div id="tabs-2">
+				<table id="tableViewID">
+				</table>
+			</div>
+			<div id="tabs-3">
+				<div id="accordionConfig">
+					<div>
+						<h3><a href="#">Configuración de Color</a></h3>
+						<div>
+							<div id="red"></div>
+							<div id="green"></div>
+							<div id="blue"></div>
+
+							<div id="swatch" class="ui-widget-content ui-corner-all"></div>
+						</div>
+					</div>
+					<div>
+						<h3><a href="#">Ancho de línea</a></h3>
+						<div>
+							<p>
+								<label for="ancho">Ancho:</label>
+								<input type="text" id="ancho" readonly="true" style="border:0; color:#f6931f; font-weight:bold; background: #767676" />
+							</p>
+							<div id="anchoLinea" style="width:260px; margin:15px;"></div>
+						</div>
+					</div>
+					<div>
+						<h3><a href="#">Rangos</a></h3>
+						<div>
+							<table width="100%">
+								<tr>
+									<td>
+										<p>
+											<label for="xMin">Rango X: desde </label>
+											<input type="text" id="xMin" readonly="true" style="border:0; color:#f6931f; font-weight:bold; background: #767676" size="2" /> hasta
+											<input type="text" id="xMax" readonly="true" style="border:0; color:#f6931f; font-weight:bold; background: #767676" size="2" />
+										</p>
+										<div id="xRange" style="width:200px;"></div>
+									</td>
+									<td>
+										<p>
+											<label for="yMin">Rango Y: desde </label>
+											<input type="text" id="yMin" readonly="true" style="border:0; color:#f6931f; font-weight:bold; background: #767676" size="2" /> hasta
+											<input type="text" id="yMax" readonly="true" style="border:0; color:#f6931f; font-weight:bold; background: #767676" size="2" />
+										</p>
+										<div id="yRange" style="width:200px;"></div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="tabs-4">
+				<div id="accordionHelp">
+					<div>
+						<h3><a href="#">Símbolos matemáticos permitidos</a></h3>
+						<div>
+							<table class="helpTable">
+								<tr>
+									<td class="helpKey">-</td>
+									<td class="helpDescription">Resta</td>
+								</tr>
+								<tr>
+									<td class="helpKey">+</td>
+									<td class="helpDescription">Suma</td>
+								</tr>
+								<tr>
+									<td class="helpKey">*</td>
+									<td class="helpDescription">Producto / Multiplicación</td>
+								</tr>
+								<tr>
+									<td class="helpKey">/</td>
+									<td class="helpDescription">Cociente / División</td>
+								</tr>
+								<tr>
+									<td class="helpKey">^</td>
+									<td class="helpDescription">Potencia</td>
+								</tr>
+								<tr>
+									<td class="helpKey">( ... )</td>
+									<td class="helpDescription">Paréntesis de agrupación</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div>
+						<h3><a href="#">Funciones matemáticas pre-definidas</a></h3>
+						<div>
+							<table class="helpTable">
+								<tr>
+									<td class="helpKey">neg / NEG</td>
+									<td class="helpDescription">Negativo --> neg(x) : representa la forma de ingresar -x</td>
+								</tr>
+								<tr>
+									<td class="helpKey">ln / LN</td>
+									<td class="helpDescription">Logaritmo neperiano --> ln(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">exp / EXP</td>
+									<td class="helpDescription">Función exponencial --> exp(x) : equivalente a e^x</td>
+								</tr>
+								<tr>
+									<td class="helpKey">cos / COS</td>
+									<td class="helpDescription">Coseno --> cos(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">sin / SIN</td>
+									<td class="helpDescription">Seno --> sin(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">tan / TAN</td>
+									<td class="helpDescription">Tangente --> tan(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">cot / COT</td>
+									<td class="helpDescription">Cotangente --> cot(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">sec / SEC</td>
+									<td class="helpDescription">Secante --> sec(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">cosec / COSEC</td>
+									<td class="helpDescription">Cosecante --> cosec(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">acos / ACOS</td>
+									<td class="helpDescription">Arco Coseno --> acos(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">asin / ASIN</td>
+									<td class="helpDescription">Arco Seno --> asin(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">atan / ATAN</td>
+									<td class="helpDescription">Arco Tangente --> atan(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">acot / ACOT</td>
+									<td class="helpDescription">Arco Cotangente --> acot(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">asec / ASEC</td>
+									<td class="helpDescription">Arco Secante --> asec(x)</td>
+								</tr>
+								<tr>
+									<td class="helpKey">acosec / ACOSEC</td>
+									<td class="helpDescription">Arco Cosecante --> acosec(x)</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div>
+						<h3><a href="#">Constantes pre-definidas</a></h3>
+						<div>
+							<table class="helpTable">
+								<tr>
+									<td class="helpKey">pi / PI</td>
+									<td class="helpDescription">3.141592653589793</td>
+								</tr>
+								<tr>
+									<td class="helpKey">e / E</td>
+									<td class="helpDescription">2.718281828459045</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
+
+
